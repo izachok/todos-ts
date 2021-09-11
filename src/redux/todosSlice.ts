@@ -23,6 +23,10 @@ const initialState: TodoType[] = [
   },
 ];
 
+const getMaxId = (todos: TodoType[]) => {
+  return Math.max(...todos.map((todo) => todo.id!));
+};
+
 export const todosSlice = createSlice({
   name: "todos",
   initialState,
@@ -33,6 +37,13 @@ export const todosSlice = createSlice({
           ? { ...item, completed: !item.completed }
           : item
       ),
+    addTodo: (state, { payload }: PayloadAction<TodoType>) => {
+      const newId = getMaxId(state) + 1;
+      state.push({ ...payload, id: newId });
+      return state;
+    },
+    deleteTodo: (state, { payload }: PayloadAction<number>) =>
+      state.filter((todo) => todo.id !== payload),
   },
 });
 
